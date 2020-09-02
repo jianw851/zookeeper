@@ -22,7 +22,7 @@ RUN apt-get install -y wget && \
     apt-get install -y gnupg;
 
 # set up env vars
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-arm64/
 ENV ZOOKEEPER_VERSION 3.5.8
 ENV ZOOKEEPER_HOME /opt/zookeeper-${ZOOKEEPER_VERSION}
 
