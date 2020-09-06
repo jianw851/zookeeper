@@ -5,6 +5,7 @@ USER root
 # Install OpenJDK-8
 RUN apt-get update && \
     apt-get upgrade -y && \
+    apt-get apt-utils -y && \
     apt-get install -y openjdk-8-jdk && \
     apt-get install -y net-tools && \
     apt-get install -y telnetd && \
@@ -26,18 +27,12 @@ RUN apt-get install -y wget && \
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-arm64/
 ENV ZOOKEEPER_VERSION 3.5.8
 ENV ZOOKEEPER_HOME /opt/zookeeper
-ENV KAFKA_VERSION=2.6.0 \
-    SCALA_VERSION=2.13
-ENV PATH=${PATH}:${ZOOKEEPER_HOME}/bin
+ENV ZOOKCFGDIR=/opt/zookeeper/conf
 
-
-# copy a kafka binary release
-ADD kafka_${SCALA_VERSION}-${KAFKA_VERSION} /opt/zookeeper
-RUN mkdir /var/lib/zookeeper /var/lib/zookeeper/data /var/lib/zookeeper/log
-
-EXPOSE 2181 2888 3888
-WORKDIR /opt/zookeeper
+# add zookeeper bin files
+ADD zookeeper /opt/zookeeper
+ADD init.sh /opt/zookeeper/init.sh
 
 # entry point
-ADD start_zookeeper.sh /usr/bin/start_zookeeper.sh
-ENTRYPOINT ["start_zookeeper.sh"]
+EXPOSE 2181 2888 3888
+WORKDIR /opt/zookeeper

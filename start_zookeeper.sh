@@ -1,5 +1,7 @@
 #!/bin/sh
-sed -i -r 's|#(log4j.appender.ROLLINGFILE.MaxBackupIndex.*)|\1|g' $ZOOKEEPER_HOME/conf/log4j.properties
-sed -i -r 's|#autopurge|autopurge|g' $ZOOKEEPER_HOME/conf/zoo.cfg
-/opt/zookeeper-${ZOOKEEPER_VERSION}/bin/zkServer.sh start-foreground
-
+set -e
+set -x
+[ -z "$ID_OFFSET" ] && ID_OFFSET=1
+export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + $ID_OFFSET))
+echo "${ZOOKEEPER_SERVER_ID:-1}" | tee /var/lib/zookeeper/data/myid
+/opt/zookeeper/bin/zookeeper-server-start.sh /opt/zookeeper/config/zookeeper.properties
